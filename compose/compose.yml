@@ -1,0 +1,33 @@
+services:
+  hello:
+    build:
+      context: ..
+      dockerfile: docker/base.Dockerfile
+      args:
+        STAGE_NAME: stage0_hello
+    ports:
+      - 4200:4200
+    profiles: ["stage0"]
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.mcp_hello.entrypoints=websecure"
+      - "traefik.http.routers.mcp_hello.rule=Host(`mcp.$DOMAINNAME`) && PathPrefix(`/hello`)"
+      # Middlewares
+      - "traefik.http.routers.mcp_hello.service=mcp_hello"
+      - "traefik.http.routers.mcp_hello.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mcp_hello.loadbalancer.server.port=4200"
+
+    deploy:
+      resources:
+        reservations:
+          cpus: "1"
+          memory: 1GB
+        limits:
+          cpus: "2"
+          memory: "4GB"
+    networks:
+      - traefik_proxy
+networks:
+  traefik_proxy:
+    external: True

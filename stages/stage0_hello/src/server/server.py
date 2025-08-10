@@ -20,7 +20,7 @@ def main():
         transport="http",
         host="0.0.0.0",
         port=4200,
-        path="/dice",
+        path="/",
         log_level="debug"
     )
 

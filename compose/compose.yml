@@ -13,11 +13,10 @@ services:
       # HTTP Routers
       - "traefik.http.routers.mcp_hello.entrypoints=websecure"
       - "traefik.http.routers.mcp_hello.rule=Host(`mcp.$DOMAINNAME`) && PathPrefix(`/hello`)"
-      # Middlewares
       - "traefik.http.routers.mcp_hello.service=mcp_hello"
       - "traefik.http.routers.mcp_hello.tls.certresolver=letsencrypt"
       - "traefik.http.services.mcp_hello.loadbalancer.server.port=4200"
-
+      - "traefik.http.routers.mcp_hello.middlewares=middlewares-remove-prefix@file"
     deploy:
       resources:
         reservations:
